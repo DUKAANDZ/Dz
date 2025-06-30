@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تم إرسال إثبات الدفع</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0 16px;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 15px;
+      color: #ccc;
+    }
+
+    a.button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #9b4dff;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>✅</h2>
+    <p>
+      يرجى الآن إرسال وصل الدفع الخاص بعملية <strong>بريدي موب</strong> إلى بريدنا الإلكتروني:<br>
+      <strong style="color:#fff">Dukaandz@yopmail.com</strong>
+    </p>
+    <p>📨 سيتم تحويلك تلقائيًا إلى تطبيق Gmail خلال ثوانٍ...</p>
+    <a class="button" href="mailto:Dukaandz@yopmail.com?subject=وصل دفع بريدي موب&body=أرفقت وصل الدفع كدليل على العملية.">فتح Gmail الآن</a>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      window.location.href = "mailto:Dukaandz@yopmail.com?subject=وصل دفع بريدي موب&body=أرفقت وصل الدفع كدليل على العملية.";
+    }, 4000);
+  </script>
+
+</body>
+</html>

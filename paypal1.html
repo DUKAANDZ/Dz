@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>ID Paypal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0 16px;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      padding: 25px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    img.logo {
+      width: 80px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      border: 2px solid #b065f5;
+      box-shadow: 0 0 10px rgba(176,101,245,0.6);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #9b4dff;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .note {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="paypal.png" class="logo" alt="Paypal Logo" />
+    <input type="text" id="userId" placeholder=" ادخل عنوان بايبال الخاص بك ">
+    <button onclick="handleContinue()">استمرار</button>
+    <div class="note" id="note"></div>
+  </div>
+
+  <script>
+    function handleContinue() {
+      const userId = document.getElementById('userId').value.trim();
+      if (userId === "") {
+        document.getElementById("note").textContent = "⚠️ يرجى إدخال ID قبل المتابعة.";
+        return;
+      }
+      localStorage.setItem("paypal_user_id", userId);
+      window.location.href = "confirm.html";
+    }
+  </script>
+
+</body>
+</html>

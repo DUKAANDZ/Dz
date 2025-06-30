@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قائمة البائعين</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      direction: rtl;
+      padding: 0;
+    }
+
+    header {
+      background: #FFD700;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header img {
+      height: 35px;
+      margin-right: 10px;
+    }
+
+    header span {
+      color: red;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    select {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      background: #fff;
+      font-size: 0.95rem;
+    }
+
+    .seller-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .seller-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+    }
+
+    .seller-card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid #ccc;
+    }
+
+    .seller-card .status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: green; /* Default to green */
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .seller-card .status.offline {
+      background-color: red;
+    }
+
+    .seller-card h3 {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+
+    .seller-card p {
+      margin: 3px 0;
+      font-size: 0.9rem;
+    }
+
+    .seller-card button {
+      margin-top: 10px;
+      padding: 8px 20px;
+      background: #4caf50;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .pagination {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .pagination button {
+      background: #eee;
+      border: none;
+      padding: 8px 12px;
+      margin: 3px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #4caf50;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      color: #ccc;
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ شريط علوي مع الشعار والقائمة المنسدلة -->
+  <header>
+    <div style="display: flex; align-items: center;">
+      <img src="dokaan.png" alt="logo" />
+      <span>Dz</span>
+    </div>
+    <div>
+      <select onchange="navigate(this)">
+        <option selected disabled>القائمة</option>
+        <option value="about.html">حول الموقع</option>
+      
+        <option value="report.html">الإبلاغ عن مشكل دفع</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="seller-list" id="sellerList"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <footer>
+    جميع الحقوق محفوظة © 2023
+  </footer>
+
+  <script>
+    function navigate(select) {
+      const page = select.value;
+      if (page) window.location.href = page;
+    }
+
+    const wilayas = ["الجزائر", "البليدة", "بومرداس", "تيبازة", "تيزي وزو", "المدية", "سطيف", "عنابة", "قسنطينة"];
+
+    function generateUsername() {
+      const base = ["crypto", "user", "dz", "btc", "meta"];
+      const tag = ["pro", "x", "net", "dz", "plus"];
+      return "@" + base[Math.floor(Math.random()*base.length)] + "_" + tag[Math.floor(Math.random()*tag.length)] + Math.floor(Math.random()*100);
+    }
+
+    function generateSellers() {
+      const sellers = [];
+      const usedNames = new Set();
+      while (sellers.length < 92) {
+        const name = generateUsername();
+        if (usedNames.has(name)) continue;
+        usedNames.add(name);
+        sellers.push({
+          username: name,
+          amount: Math.floor(Math.random() * 300 + 50),
+          wilaya: wilayas[Math.floor(Math.random() * wilayas.length)],
+          avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`,
+          online: Math.random() < 0.5 // Randomly set as online or offline
+        });
+      }
+      return sellers;
+    }
+
+    let sellers = JSON.parse(localStorage.getItem("sellers"));
+    if (!sellers) {
+      sellers = generateSellers();
+      localStorage.setItem("sellers", JSON.stringify(sellers));
+    }
+
+    const sellersPerPage = 10;
+    let currentPage = 1;
+
+    function displaySellers(page) {
+      const list = document.getElementById("sellerList");
+      list.innerHTML = "";
+      const start = (page - 1) * sellersPerPage;
+      const paginated = sellers.slice(start, start + sellersPerPage);
+
+      for (const s of paginated) {
+        const div = document.createElement("div");
+        div.className = "seller-card";
+        div.innerHTML = `
+          <img src="${s.avatar}" alt="seller">
+          <div class="status ${s.online ? '' : 'offline'}"></div>
+          <h3>${s.username}</h3>
+          <p>الكمية: ${s.amount} USDT</p>
+          <p>الولاية: ${s.wilaya}</p>
+          <button onclick="location.href='1.html'">شراء</button>
+        `;
+        list.appendChild(div);
+      }
+    }
+
+    function setupPagination() {
+      const pageCount = Math.ceil(sellers.length / sellersPerPage);
+      const pag = document.getElementById("pagination");
+      pag.innerHTML = "";
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => {
+          currentPage = i;
+          displaySellers(currentPage);
+          setupPagination();
+        };
+        pag.appendChild(btn);
+      }
+    }
+
+    displaySellers(currentPage);
+    setupPagination();
+  </script>
+
+</body>
+</html>
+  

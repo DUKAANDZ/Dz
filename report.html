@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>صفحة الإبلاغ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 25px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(155, 77, 255, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #bb86fc;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #9b4dff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 15px;
+      color: #c0ffc0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🛑 بلاغ بخصوص معاملة</h2>
+
+    <input type="text" id="seller" placeholder="اسم البائع" required />
+    <input type="number" id="amount" placeholder="مبلغ الدفع بالدينار" required />
+    <input type="text" id="transactionId" maxlength="12" placeholder="رقم معاملة بريدي موب (12 رقم)" required />
+
+    <button onclick="submitReport()">إرسال البلاغ</button>
+
+    <div class="message" id="successMsg">
+      ✅ تم إرسال الطلب، سيتم دراسة حالتك خلال 20 دقيقة كأقصى حد.
+    </div>
+  </div>
+
+  <script>
+    function submitReport() {
+      const seller = document.getElementById('seller').value.trim();
+      const amount = document.getElementById('amount').value.trim();
+      const trx = document.getElementById('transactionId').value.trim();
+
+      if (!seller || !amount || trx.length !== 12 || isNaN(trx)) {
+        alert("يرجى تعبئة جميع الحقول بشكل صحيح.");
+        return;
+      }
+
+      document.getElementById("successMsg").style.display = "block";
+    }
+  </script>
+</body>
+</html>

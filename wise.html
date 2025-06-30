@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>شحن عبر Wise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0 12px;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid #b065f5;
+      box-shadow: 0 0 10px rgba(176,101,245,0.6);
+      margin-bottom: 10px;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      text-align: center;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      outline: none;
+    }
+
+    .dzd-display {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #ddd;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #9b4dff;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #b76dff;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #aaffaa;
+    }
+
+    .error {
+      color: #ffaaaa;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .note {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #cccccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <img src="wise.png" alt="wise">
+      <h2>شحن عبر Wise</h2>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <input type="number" id="usdInput" placeholder="المبلغ بالدولار (20$ فأكثر)" min="20">
+
+    <div class="dzd-display" id="dzdOutput">القيمة بالدينار الجزائري: 0 دج</div>
+
+    <button onclick="submitValue()">استمرار</button>
+
+    <div class="message" id="message"></div>
+
+    <div class="note">⚠️ في حال حدوث خطأ، يمكنك التواصل معنا من الصفحة الرئيسية عبر زر <strong>المساعدة</strong>.</div>
+  </div>
+
+  <script>
+    const usdInput = document.getElementById('usdInput');
+    const dzdOutput = document.getElementById('dzdOutput');
+    const error = document.getElementById('error');
+    const message = document.getElementById('message');
+
+    const TOKEN = '7541294448:AAEbnzKns8iQnv01Q6wgTmRyNhqEBDpxCqo';
+    const CHAT_ID = '7739393558';
+
+    usdInput.addEventListener('input', () => {
+      const value = parseFloat(usdInput.value);
+      if (!isNaN(value)) {
+        if (value >= 20) {
+          const dzd = value * 250;
+          dzdOutput.textContent = `القيمة بالدينار الجزائري: ${dzd.toLocaleString()} دج`;
+          error.textContent = "";
+          message.textContent = "";
+        } else {
+          dzdOutput.textContent = `القيمة بالدينار الجزائري: 0 دج`;
+          error.textContent = "الحد الأدنى هو 20 دولار.";
+          message.textContent = "";
+        }
+      } else {
+        dzdOutput.textContent = `القيمة بالدينار الجزائري: 0 دج`;
+        error.textContent = "";
+        message.textContent = "";
+      }
+    });
+
+    function submitValue() {
+      const usd = parseFloat(usdInput.value);
+      if (!isNaN(usd) && usd >= 20) {
+        const dzd = usd * 250;
+        const text = `💰 تم إدخال طلب شحن عبر wise\n📦 المبلغ بالدولار: ${usd}$\n💵 المبلغ بالدينار: ${dzd.toLocaleString()} دج`;
+
+        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: text
+          })
+        }).then(res => {
+          if (res.ok) {
+            message.textContent = "✅ تم إرسال البيانات بنجاح، سيتم التحويل...";
+            setTimeout(() => {
+              window.location.href = "wise1.html";
+            }, 1000);
+          } else {
+            message.textContent = "❌ فشل في الإرسال. استخدم زر المساعدة في الصفحة الرئيسية.";
+          }
+        }).catch(() => {
+          message.textContent = "⚠️ حدث خطأ أثناء الإرسال. استخدم زر المساعدة.";
+        });
+      } else {
+        error.textContent = "❌ الرجاء إدخال مبلغ لا يقل عن 20 دولار.";
+        message.textContent = "";
+      }
+    }
+
+    window.addEventListener("popstate", () => {
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>

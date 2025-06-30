@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>دفع عبر بريد الجزائر</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0 16px;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      padding: 25px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    img.logo {
+      width: 120px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(176, 101, 245, 0.6);
+    }
+
+    .account-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 18px;
+      margin-bottom: 15px;
+      word-wrap: break-word;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #9b4dff;
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .note {
+      font-size: 15px;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img src="baridi.png" alt="Baridi Logo" class="logo" />
+
+    <div class="account-box" id="accountNumber">00799999001454079773</div>
+    <button onclick="copyAccount()">نسخ</button>
+
+    <div class="note" id="amountNote">
+       <span id="amount"></span> <br>
+      يرجى تأكيد عملية الدفع بإرسال لقطة شاشة لوصل الدفع.
+    </div>
+
+    <button onclick="confirmPayment()">تأكيد عملية الدفع</button>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const amount = localStorage.getItem("payer_dzd");
+      if (amount) {
+        document.getElementById("amount").textContent = amount;
+      }
+    };
+
+    function copyAccount() {
+      const account = document.getElementById("accountNumber").textContent;
+      navigator.clipboard.writeText(account).then(() => {
+        alert("✅ تم نسخ رقم الحساب!");
+      });
+    }
+
+    function confirmPayment() {
+      window.location.href = "upload.html";
+    }
+  </script>
+
+</body>
+</html>
